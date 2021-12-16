@@ -4,7 +4,7 @@
 
   EPFL CS-472 2021 Final Project Option 1
 */
-
+ 
 #pragma once
 
 #include "../networks/aig.hpp"
