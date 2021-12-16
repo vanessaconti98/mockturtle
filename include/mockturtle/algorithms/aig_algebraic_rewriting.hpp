@@ -4,7 +4,7 @@
 
   EPFL CS-472 2021 Final Project Option 1
 */
- 
+
 #pragma once
 
 #include "../networks/aig.hpp"
@@ -60,8 +60,8 @@ private:
       return true;
     if ( try_3_layer( n ) )
       return true;
-    //if ( try_absorption_and( n ) )
-       //return true;
+    /* if ( try_absorption_and( n ) )
+       return true;*/
     return false;
   }
 
@@ -187,7 +187,10 @@ private:
 
      if ( ntk.level( critical_granchild ) > ntk.level( child_not_critical ) && !ntk.is_complemented( signal_crit_child ) )
      {
-       a_swap( signal_not_cri_child, not_critical_granchild_signal, critical_granchild_signal, n, child_critical );
+       signal d_first = ntk.create_and( signal_not_cri_child, not_critical_granchild_signal );
+       signal e_first = ntk.create_and( critical_granchild_signal, d_first );
+       ntk.substitute_node( n, e_first );
+       return true;
      }
      else
        return false;
@@ -266,11 +269,6 @@ private:
         ntk.substitute_node( n, !new_output );
         return true;
       }
-      //else if ( diversi.size() == 1 ) //caso dove c'è un PI: A+(A+B) = A+B / semplice A+B forse commenta
-      //{
-       // signal b_first = ntk.create_and( !comune, !diversi[0] );
-        //ntk.substitute_node( n, b_first );
-     // }
       else
           return false;
     }
@@ -348,11 +346,6 @@ private:
       ntk.substitute_node( n, new_output );
       return true;
     }
-    //else if ( diversi.size() == 1 ) //caso dove c'è un PI: A+(A+B) = A+B / semplice A+B forse commenta
-    //{
-    // signal b_first = ntk.create_and( !comune, !diversi[0] );
-    //ntk.substitute_node( n, b_first );
-    // }
     else
       return false;
   }
@@ -471,6 +464,7 @@ private:
         signal c = ntk.create_and( signal_not_cri_child, !signal_not_cri_granchild ); //x3 negato?
         signal d = ntk.create_and( !b, !c );
         ntk.substitute_node( n, !d );
+        return true;
       }
       else
         return false;
